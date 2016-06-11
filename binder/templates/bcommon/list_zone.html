@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block pageheader %}Zone listing for {{ zone_name }} on {{ dns_server.hostname }}{% endblock pageheader %}
+
+{% block body %}
+<p><a href="{% url "add_record" dns_server=dns_server zone_name=zone_name %}" class="btn btn-default">Add Record</a></p>
+
+<form action="{% url "delete_record" dns_server=dns_server zone_name=zone_name %}" method="post">{% csrf_token %}
+
+<table class="sortable table table-condensed table-hover">
+<tr>
+  <th>Select</th>
+  <th>Name</th>
+  <th>TTL</th>
+  <th>Class</th>
+  <th>Type</th>
+  <th>Data</th>
+  <th>Actions</th>
+</tr>
+{% for current_record in zone_array %}
+<tr>
+  <td><input type="checkbox" name="rr_list" value="{{ current_record.rr_name }}.{{ zone_name }}" /></td>
+  <td>{{ current_record.rr_name }}</td>
+  <td>{{ current_record.rr_ttl }}</td>
+  <td>{{ current_record.rr_class }}</td>
+  <td>{{ current_record.rr_type }}</td>
+  <td>{{ current_record.rr_data }}</td>
+  <td>
+    <div class="btn-toolbar" style="margin: 0;">
+      <div class="btn-group">
+        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          Record Actions <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+          <li><a href="#">Edit Record (Coming Soon)</a></li>
+          {% if current_record.rr_type == "A" %}
+          <li><a href="{% url "add_cname" dns_server=dns_server.hostname zone_name=zone_name record_name=current_record.rr_name %}">Add CNAME Pointer</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </td>
+</tr>
+{% endfor %}
+</table>
+
+<p><button class="btn btn-danger" type="submit">Delete Selected</button></p>
+</form>
+{% endblock body %}

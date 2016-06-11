@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% load staticfiles %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'binder/css/index.css' %}">
+{% endblock css %}
+
+{% block pageheader %}DNS binder app{% endblock pageheader %}
+
+{% block body %}
+<div id="intro">
+  <h4> NASA 2016 final project</h4>
+    <p>Team NA6-2</p>
+	<ul>
+	  <li>b03902089 林良翰</li>
+	  <li>b03902031 詹郁珍</li>
+	  <li>b01201049 謝崴宇</li>
+	</ul>
+<div>
+{% endblock body %}
