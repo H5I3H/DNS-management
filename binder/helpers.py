@@ -148,7 +148,7 @@ def create_update(dns_server, zone_name, record_name, record_type, record_data,
     dns_update = dns.update.Update(zone_name,
                                    keyring=keyring,
                                    keyalgorithm=algorithm)
-    dns_update.replace(record_name, ttl, record_type, record_data)
+    dns_update.add(record_name, ttl, record_type, record_data)
     output = send_dns_update(dns_update, dns_server, server.dns_port, key_name)
 
     return output

@@ -3,16 +3,18 @@
 # 3rd Party
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+from django.contrib.auth.decorators import login_required
 
 # App Imports
 from binder import forms, helpers, models
 from binder.exceptions import KeyringException, RecordException, TransferException, ZoneException
 
+@login_required
 def home_index(request):
     """List the main index page for Binder."""
     return render(request, "index.html")
 
-
+@login_required
 def view_server_list(request):
     """List the DNS servers configured in the database."""
     server_list = models.BindServer.objects.all().order_by("hostname")
@@ -24,7 +26,7 @@ def view_server_list(request):
     return render(request, "bcommon/list_servers.html",
                   {"server_info": server_info})
 
-
+@login_required
 def view_server_zones(request, dns_server):
     """Display the list of DNS zones a particular DNS host provides."""
     zone_array = {}
@@ -40,7 +42,7 @@ def view_server_zones(request, dns_server):
                   {"dns_server": this_server,
                    "zone_array": zone_array})
 
-
+@login_required
 def view_zone_records(request, dns_server, zone_name):
     """Display the list of records for a particular zone."""
     zone_array = {}
@@ -59,7 +61,7 @@ def view_zone_records(request, dns_server, zone_name):
                    "dns_server": this_server,
                    "zone_name": zone_name})
 
-
+@login_required
 def view_add_record(request, dns_server, zone_name):
     """View to allow to add A records."""
     this_server = get_object_or_404(models.BindServer, hostname=dns_server)
@@ -96,7 +98,7 @@ def view_add_record(request, dns_server, zone_name):
                   {"dns_server": this_server,
                    "form": form})
 
-
+@login_required
 def view_add_cname_record(request, dns_server, zone_name, record_name):
     """View to allow to add CNAME records."""
     this_server = get_object_or_404(models.BindServer, hostname=dns_server)
@@ -130,7 +132,7 @@ def view_add_cname_record(request, dns_server, zone_name, record_name):
                   {"dns_server": this_server,
                    "form": form})
 
-
+@login_required
 def view_delete_record(request, dns_server, zone_name):
     """View to handle the deletion of records."""
     dns_server = models.BindServer.objects.get(hostname=dns_server)

@@ -7,7 +7,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="{% static "bootstrap/css/bootstrap.min.css" %}" />
-  <link rel="stylesheet" href="{% static 'binder/css/base.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static "binder/css/base.css" %}">
   {% block css %}
   {% endblock css %}
   <script src="{% static "sorttable.js" %}"></script>
@@ -35,6 +35,9 @@
             <ul class="nav navbar-nav">
               <li><a href="{% url "server_list" %}">Server List</a></li>
             </ul>
+			<ul class="nav navbar-nav navbar-right">
+			  <li><a href="{% url "index" %}"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a></li>
+			  <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
           </div>
         </div>
       </div>
