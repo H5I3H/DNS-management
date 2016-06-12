@@ -7,7 +7,7 @@ DEBUG = True
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
-    ('b01201049', 'b01201049@ntu.edu.tw')
+    ('Wei-Yu Hsieh', 'b01201049@ntu.edu.tw')
 )
 
 MANAGERS = ADMINS
@@ -69,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.media',
                 'django.template.context_processors.static',
                 'django.template.context_processors.tz',
+				'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages'
                 ],
             'debug': True

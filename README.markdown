@@ -1,13 +1,12 @@
 # Binder #
 
-[![Build Status](https://travis-ci.org/jforman/binder.svg?branch=master)](https://travis-ci.org/jforman/binder)
-[![Code Health](https://landscape.io/github/jforman/binder/master/landscape.svg?style=flat)](https://landscape.io/github/jforman/binder/master)
+This is final project of NTU NASA 2016.
 
 A Django web application for viewing and editing BIND DNS zone records.
 
-Binder supports adding and deleting DNS records (and eventually editing in place). TSIG-authenticated transfers and updates are supported.
+Binder supports adding and deleting DNS records (I am working on editing right now). TSIG-authenticated transfers and updates are supported.
 
-The Binder repository is housed in a [Github](http://github.com/jforman/binder) repository. The repo containts all the Django code and example configuration data for running Binder both in development and production.
+The original code is at [here](http://github.com/jforman/binder).
 
 ## Installation ##
 
@@ -119,21 +118,3 @@ Below are the entire contents of the dynzone.key file. This specifies the name, 
 referenced as 'dynzone-key' in named.conf
 
 For information on TSIG see http://www.cyberciti.biz/faq/unix-linux-bind-named-configuring-tsig/ .
-
-### Related Configuration ###
-
-#### Apache HTTPD ####
-
-If you are using Apache to front-end your Binder Django app, the following two configuration files can be used as starting points.
-
-[binder-apache.conf.dist](https://github.com/jforman/binder/blob/master/config/binder-apache.conf.dist): Apache virtual host configuration file to be inclued in your apache.conf. Values provide for Binder to run on its own virtual host, separate logs, etc
-
-[django.wsgi](https://github.com/jforman/binder/blob/master/config/django.wsgi): WSGI configuration file used by Apache to run the actual Django app.
-
-#### Nginx ####
-
-[binder-nginx.conf.dist](https://github.com/jforman/binder/blob/master/config/binder-nginx.conf.dist): Nginx virtual host configuraiton. This configuration expects Django to be running in fcgi mode on port 4001 on 127.0.0.1.
-
-#### Ubuntu Upstart ####
-
-To have Binder start upon system boot, if you are running Ubuntu, I have provided an [example Upstart configurarton](https://github.com/jforman/binder/blob/master/config/binder-upstart.conf.dist) to be installed in /etc/init/.

@@ -64,6 +64,8 @@ def view_zone_records(request, dns_server, zone_name):
 @login_required
 def view_add_record(request, dns_server, zone_name):
     """View to allow to add A records."""
+    if not request.user.is_staff and not request.user.is_superuser:
+        return render(request, "403.html", status=403)
     this_server = get_object_or_404(models.BindServer, hostname=dns_server)
 
     if request.method == 'POST':
@@ -101,6 +103,8 @@ def view_add_record(request, dns_server, zone_name):
 @login_required
 def view_add_cname_record(request, dns_server, zone_name, record_name):
     """View to allow to add CNAME records."""
+    if not request.user.is_staff and not request.user.is_superuser:
+        return render(request, "403.html", status=403)
     this_server = get_object_or_404(models.BindServer, hostname=dns_server)
 
     if request.method == 'POST':
@@ -135,6 +139,8 @@ def view_add_cname_record(request, dns_server, zone_name, record_name):
 @login_required
 def view_delete_record(request, dns_server, zone_name):
     """View to handle the deletion of records."""
+    if not request.user.is_staff and not request.user.is_superuser:
+        return render(request, "403.html", status=403)
     dns_server = models.BindServer.objects.get(hostname=dns_server)
     rr_list = request.POST.getlist("rr_list")
 
