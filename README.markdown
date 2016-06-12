@@ -28,16 +28,14 @@ Packages installed:
 
 * [Django](http://www.djangoproject.com) >=1.8
 * Python Modules
-  * [pybindxml](https://pypi.python.org/pypi?name=pybindxml&:action=display): This is a shared library I wrote to scrape and stick into Python dict objects various server/zone data from a BIND DNS server.
-  * Beautifulsoup4: This library is included as a dependency of pybindmlx when you  when you install pybindxml.
+  * [pybindxml](https://pypi.python.org/pypi?name=pybindxml&:action=display): This is a shared library for scraping and sticking into Python dict objects various server/zone data from a BIND DNS server.
+  * Beautifulsoup4: This library is included as a dependency of pybindmlx when you install pybindxml.
   * [python-dnspython](http://www.dnspython.org/)
   * [python-sqlite](http://docs.python.org/2/library/sqlite3.html) (If you will be using Sqlite for server and key storage)
 
 Elsewhere you will need a [Bind DNS Server](http://www.isc.org/software/bind) running (at least version 9.5.x, which provides instrumentation for gathering process and zone statistics remotely).
 
-To verify that required and optional dependencies are installed, execute [check-dependencies.py](https://github.com/jforman/binder/blob/master/check-dependencies.py). This script checks that various Python modules will import correctly.
-
-Binder is intended to be installed into the /opt directory in /opt/binder. Forthcoming deb packages will provide for this easy installation and upgrades.
+To verify that required and optional dependencies are installed, execute [check-dependencies.py](https://github.com/H5I3H/DNS-management/blob/master/check-dependencies.py). This script checks that various Python modules will import correctly.
 
 ## Configuration ##
 
