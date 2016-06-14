@@ -20,7 +20,7 @@
 </tr>
 {% for current_record in zone_array %}
 <tr>
-  <td><input type="checkbox" name="rr_list" value="{{ current_record.rr_name }}.{{ zone_name }}" /></td>
+  <td><input type="checkbox" name="rr_list" value="{{ current_record.rr_name }}.{{ zone_name }}||{{ current_record.rr_data }}||{{ current_record.rr_type }}" /></td>
   <td>{{ current_record.rr_name }}</td>
   <td>{{ current_record.rr_ttl }}</td>
   <td>{{ current_record.rr_class }}</td>

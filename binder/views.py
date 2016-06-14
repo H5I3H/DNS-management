@@ -192,13 +192,17 @@ def view_delete_record(request, dns_server, zone_name):
         form = forms.FormDeleteRecord(request.POST)
         if form.is_valid():
             form_cleaned = form.cleaned_data
-            rr_list = form_cleaned["rr_list"]
+            name_list = form_cleaned["name_list"]
+            data_list = form_cleaned["data_list"]
+            type_list = form_cleaned["type_list"]
             try:
                 response = helpers.delete_record(form_cleaned["dns_server"],
-                                                 rr_list,
+                                                 name_list,
+												 type_list,
+												 data_list,
                                                  form_cleaned["key_name"])
             except KeyringException as exc:
-                for record in rr_list:
+                for record in name_list:
                     messages.error(request, "Deleting %s.%s failed: %s" %
                                    (record, zone_name, exc))
             else:
@@ -212,6 +216,15 @@ def view_delete_record(request, dns_server, zone_name):
                 return redirect('zone_list',
                                 dns_server=dns_server,
                                 zone_name=zone_name)
+        else:
+            name_list = []
+            data_list = []
+            type_list = []
+            for cur in rr_list:
+                name_list.append(cur.split('||')[0])
+                data_list.append(cur.split('||')[1])
+                type_list.append(cur.split('||')[2])
+
     else:
         form = forms.FormDeleteRecord(initial={'zone_name': zone_name})
 
@@ -219,4 +232,7 @@ def view_delete_record(request, dns_server, zone_name):
                   {"dns_server": dns_server,
                    "zone_name": zone_name,
                    "rr_list": rr_list,
+				   "data_list": data_list,
+				   "type_list": type_list,
+				   "name_list": name_list,
                    "form": form})

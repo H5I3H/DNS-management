@@ -46,7 +46,7 @@ class CustomStringPeriodSuffix(forms.CharField):
 
 class FormAddForwardRecord(forms.Form):
 
-    """Form used to add a Forward DNS record."""
+    """Form used to add/update a Forward DNS record."""
 
     dns_server = forms.CharField(max_length=100)
     record_name = forms.RegexField(max_length=100,
@@ -109,6 +109,9 @@ class FormDeleteRecord(forms.Form):
     dns_server = forms.CharField(max_length=100)
     zone_name = forms.CharField(max_length=256)
     rr_list = CustomUnicodeListField()
+    data_list = CustomUnicodeListField()
+    name_list = CustomUnicodeListField()
+    type_list = CustomUnicodeListField()
     key_name = forms.ModelChoiceField(queryset=Key.objects.all(),
                                       required=False,
                                       widget=forms.RadioSelect,

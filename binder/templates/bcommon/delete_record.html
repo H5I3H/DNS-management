@@ -27,11 +27,29 @@
     </div>
   </div>
 
+  <input type="hidden" id="rr_list" name="rr_list" value="{{ rr_list }}" />
+
   <div class="form-group">
-    <label for="rr_list" class="col-sm-3 control-label">Records:</label>
-    <input type="hidden" id="rr_list" name="rr_list" value="{{ rr_list }}" />
+    <label for="name_list" class="col-sm-3 control-label">Record Names:</label>
+    <input type="hidden" id="name_list" name="name_list" value="{{ name_list }}" />
     <div class="col-sm-5 col-md-4">
-      <p class="form-control-static">{% for current_rr in rr_list %}{{ current_rr }}<br /> {% endfor %}</p>
+      <p class="form-control-static">{% for current_name in name_list %}{{ current_name }}<br /> {% endfor %}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="type_list" class="col-sm-3 control-label">Record types:</label>
+    <input type="hidden" id="type_list" name="type_list" value="{{ type_list }}" />
+    <div class="col-sm-5 col-md-4">
+      <p class="form-control-static">{% for current_type in type_list %}{{ current_type }}<br /> {% endfor %}</p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="data_list" class="col-sm-3 control-label">Record Datas:</label>
+    <input type="hidden" id="data_list" name="data_list" value="{{ data_list }}" />
+    <div class="col-sm-5 col-md-4">
+      <p class="form-control-static">{% for current_data in data_list %}{{ current_data }}<br /> {% endfor %}</p>
     </div>
   </div>
 

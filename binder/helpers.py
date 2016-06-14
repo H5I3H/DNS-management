@@ -73,7 +73,7 @@ def add_record(dns_server, zone_name, record_name, record_type, record_data,
 
 def udpate_record(dns_server, zone_name, record_name, record_type, record_data,
                ttl, key_name, create_reverse=False):
-    """Parse passed elements and determine which records to create.
+    """Parse passed elements and determine which records to update.
 
     Args:
       String dns_server
@@ -142,7 +142,7 @@ def add_cname_record(dns_server, zone_name, cname, originating_record, ttl,
              "output": output}]
 
 
-def delete_record(dns_server, rr_list, key_name):
+def delete_record(dns_server, rr_list, type_list, data_list, key_name):
     """Delete a list of DNS records passed as strings in rr_items."""
     server = models.BindServer.objects.get(hostname=dns_server)
 
@@ -158,14 +158,18 @@ def delete_record(dns_server, rr_list, key_name):
         algorithm = transfer_key.algorithm
 
     delete_response = []
+    count = 0
     for current_rr in rr_list:
         record_list = current_rr.split(".", 1)
         record = record_list[0]
         domain = record_list[1]
+        data = data_list[count]
+        typed = type_list[count]
+        count = count + 1
         dns_update = dns.update.Update(domain,
                                        keyring=keyring,
                                        keyalgorithm=algorithm)
-        dns_update.delete(record)
+        dns_update.delete(record, typed, data)
         try:
             output = send_dns_update(dns_update,
                                     dns_server,
@@ -185,7 +189,7 @@ def delete_record(dns_server, rr_list, key_name):
 
 def create_update(dns_server, zone_name, record_name, record_type, record_data,
                   ttl, key_name):
-    """Update/Create DNS record of name and type with passed data and ttl."""
+    """Create DNS record of name and type with passed data and ttl."""
     server = models.BindServer.objects.get(hostname=dns_server)
 
     logger = logging.getLogger('binder.helpers')
