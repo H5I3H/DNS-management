@@ -62,6 +62,45 @@ def view_zone_records(request, dns_server, zone_name):
                    "zone_name": zone_name})
 
 @login_required
+def view_update_record(request, dns_server, zone_name):
+    """View to allow to update A records."""
+    if not request.user.is_staff and not request.user.is_superuser:
+        return render(request, "403.html", status=403)
+    this_server = get_object_or_404(models.BindServer, hostname=dns_server)
+
+    if request.method == 'POST':
+        if "in-addr.arpa" in zone_name or "ip6.arpa" in zone_name:
+            form = forms.FormAddReverseRecord(request.POST)
+        else:
+            form = forms.FormAddForwardRecord(request.POST)
+        if form.is_valid():
+            form_cleaned = form.cleaned_data
+            try:
+                helpers.udpate_record(form_cleaned["dns_server"],
+                                   str(form_cleaned["zone_name"]),
+                                   str(form_cleaned["record_name"]),
+                                   str(form_cleaned["record_type"]),
+                                   str(form_cleaned["record_data"]),
+                                   form_cleaned["ttl"],
+                                   form_cleaned["key_name"],
+                                   form_cleaned["create_reverse"])
+            except (KeyringException, RecordException) as exc:
+                messages.error(request, "Adding %s.%s failed: %s" %
+                               (form_cleaned["record_name"], zone_name, exc))
+            else:
+                messages.success(request, "%s.%s was added successfully." %
+                                 (form_cleaned["record_name"], zone_name))
+                return redirect('zone_list',
+                                dns_server=dns_server,
+                                zone_name=zone_name)
+    else:
+        form = forms.FormAddForwardRecord(initial={'zone_name': zone_name})
+
+    return render(request, "bcommon/update_record_form.html",
+                  {"dns_server": this_server,
+                   "form": form})
+
+@login_required
 def view_add_record(request, dns_server, zone_name):
     """View to allow to add A records."""
     if not request.user.is_staff and not request.user.is_superuser:
@@ -135,7 +174,6 @@ def view_add_cname_record(request, dns_server, zone_name, record_name):
     return render(request, "bcommon/add_cname_record_form.html",
                   {"dns_server": this_server,
                    "form": form})
-
 @login_required
 def view_delete_record(request, dns_server, zone_name):
     """View to handle the deletion of records."""

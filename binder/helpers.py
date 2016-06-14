@@ -71,6 +71,60 @@ def add_record(dns_server, zone_name, record_name, record_type, record_data,
 
     return response
 
+def udpate_record(dns_server, zone_name, record_name, record_type, record_data,
+               ttl, key_name, create_reverse=False):
+    """Parse passed elements and determine which records to create.
+
+    Args:
+      String dns_server
+      String zone_name
+      String record_name (just record name, not FQDN)
+      String record_type (A, AAAA, etc)
+      String record_data (IP address)
+      Int ttl
+      String key_name (from Key model)
+      Boolean create_reverse (Whether to create a PTR record, default False)
+
+    Return:
+      Dict containing {description, output} from record creation
+    """
+    response = []
+    response.append({"description": "Forward Record Creation: %s.%s" %
+                     (record_name, zone_name),
+                     "output": update_update(dns_server,
+                                             zone_name,
+                                             record_name,
+                                             record_type,
+                                             record_data,
+                                             ttl,
+                                             key_name)})
+
+    """If requested, create a reverse PTR record.
+
+    Given the forward record created, resolve its underlying IP.
+    Use that to create the reverse record.
+    reverse_ip_fqdn ex: 5.0.20.10.in-addr.arpa.
+    reverse_ip: 5
+    reverse_domain: 0.20.10.in-addr.arpa.
+    """
+    if create_reverse:
+        reverse_ip_fqdn = str(dns.reversename.from_address(record_data))
+        # There must be a cleaner way to figure out the ip/domain
+        # for this reverse DNS record parsing.
+        reverse_ip = re.search(r"([0-9]+).(.*)$", reverse_ip_fqdn).group(1)
+        reverse_domain = re.search(r"([0-9]+).(.*)$", reverse_ip_fqdn).group(2)
+        response.append({"description": "Reverse Record Creation: %s" % record_data,
+                         "output": create_update(dns_server,
+                                                 reverse_domain,
+                                                 reverse_ip,
+                                                 "PTR",
+                                                 "%s.%s." % (record_name, zone_name),
+                                                 ttl,
+                                                 key_name)})
+
+    return response
+
+
 
 def add_cname_record(dns_server, zone_name, cname, originating_record, ttl,
                      key_name):
@@ -153,6 +207,29 @@ def create_update(dns_server, zone_name, record_name, record_type, record_data,
 
     return output
 
+def update_update(dns_server, zone_name, record_name, record_type, record_data, 
+		ttl, key_name):
+    """Update DNS record of name and type with passed data and ttl."""
+    server = models.BindServer.objects.get(hostname=dns_server)
+
+    logger = logging.getLogger('binder.helpers')
+    try:
+        transfer_key = models.Key.objects.get(name=key_name)
+    except models.Key.DoesNotExist as exc:
+        logger.error(exc)
+        raise KeyringException("The specified TSIG key %s does not exist in "
+							   "binder configuration." % key_name)
+    else:
+        keyring = transfer_key.create_keyring()
+        algorithm = transfer_key.algorithm
+
+    dns_update = dns.update.Update(zone_name, 
+								   keyring=keyring,
+								   keyalgorithm=algorithm)
+    dns_update.replace(record_name, ttl, record_type, record_data)
+    output = send_dns_update(dns_update, dns_server, server.dns_port, key_name)
+
+    return output
 
 def ip_info(host_name):
     """Create a dictionary mapping address types to their IP's.
