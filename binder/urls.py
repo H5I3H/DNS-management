@@ -17,7 +17,6 @@ urlpatterns = [
     url(r'^info/(?P<dns_server>[a-zA-Z0-9.-]+)/(?P<zone_name>[a-zA-Z0-9.-]+)/$', binder.views.view_zone_records, name="zone_list"),
 
     url(r'^add_record/(?P<dns_server>[a-zA-Z0-9.-]+)/(?P<zone_name>[a-zA-Z0-9.-]+)/$', binder.views.view_add_record, name="add_record"),
-	url(r'^update_record/(?P<dns_server>[a-zA-Z0-9.-]+)/(?P<zone_name>[a-zA-Z0-9.-]+)/$', binder.views.view_update_record, name="update_record"),
     url(r'^add_cname/(?P<dns_server>[a-zA-Z0-9.-]+)/(?P<zone_name>[a-zA-Z0-9.-]+)/(?P<record_name>.*?)/$', binder.views.view_add_cname_record, name="add_cname"),
     url(r'^delete_record/(?P<dns_server>[a-zA-Z0-9.-]+)/(?P<zone_name>[a-zA-Z0-9.-]+)/$', binder.views.view_delete_record, name="delete_record"),
 ]

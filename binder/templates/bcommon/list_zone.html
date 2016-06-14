@@ -4,7 +4,6 @@
 
 {% block body %}
 <p><a href="{% url "add_record" dns_server=dns_server zone_name=zone_name %}" class="btn btn-default">Add Record</a></p>
-<p><a href="{% url "update_record" dns_server=dns_server zone_name=zone_name %}" class="btn btn-default">Update Record</a></p>
 
 <form action="{% url "delete_record" dns_server=dns_server zone_name=zone_name %}" method="post">{% csrf_token %}
 
