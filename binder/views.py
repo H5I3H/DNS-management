@@ -201,18 +201,9 @@ def view_delete_record(request, dns_server, zone_name):
 
 @login_required
 def view_query_history(request, dns_server):
+    """View the query history of the choosen DNS server"""
     try:
-        output = subprocess.check_output(["query.sh"])
-    except (OSError, IOError) as e:
-        server_list = models.BindServer.objects.all().order_by("hostname")
-        server_info = []
-        for current in server_list:
-            server_info.append({"host_name": current, 
-					"ip_address": helpers.ip_info(current.hostname)})
-
-        messages.error(request, "Some error occur when getting "
-				"history of %s" % dns_server)
-        return redirect("server_list")
+        output = subprocess.check_output(["python", "query.py"])
     except subprocess.CalledProcessError:
         server_list = models.BindServer.objects.all().order_by("hostname")
         server_info = []

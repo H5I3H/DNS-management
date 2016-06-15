@@ -1,11 +1,29 @@
 {% extends "base.html" %}
 
-{% block pageheader %}Query history of {{dns_server}}{% endblock pageheader %}
+{% block pageheader %}Statistics of query history of {{dns_server}}{% endblock pageheader %}
 
 {% block body %}
-<p>There are {{ output_list.0 }} type A queries</p>
-<p>There are {{ output_list.1 }} type AAAA queries</p>
-<p>There are {{ output_list.2 }} type CNAME queries</p>
-<p>There are {{ output_list.3 }} type NS queries</p>
-<p>From {{output_list.4}} to {{output_list.5}}</p>
+<table class="sortable table table-condensed table-hover">
+<tr>
+  <th>Query Type</th>
+  <th>Query Time</th>
+</tr>
+<tr>
+  <td>A</td>
+  <td>{{ output_list.0 }}</td>
+</tr>
+<tr>
+  <td>AAAA</td>
+  <td>{{ output_list.1 }}</td>
+</tr>
+<tr>
+  <td>CNAME</td>
+  <td>{{ output_list.2 }}</td>
+</tr>
+<tr>
+  <td>NS</td>
+  <td>{{ output_list.3 }}</td>
+</tr>
+</table>
+<p>From {{ output_list.4 }} to {{ output_list.5 }}</p>
 {% endblock body %}
