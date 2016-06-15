@@ -208,7 +208,7 @@ def view_query_history(request, dns_server):
         server_info = []
         for current in server_list:
             server_info.append({"host_name": current, 
-								"ip_address": helpers.ip_info(current.hostname)})
+					"ip_address": helpers.ip_info(current.hostname)})
 
         messages.error(request, "Some error occur when getting "
 				"history of %s" % dns_server)
@@ -217,12 +217,12 @@ def view_query_history(request, dns_server):
         server_list = models.BindServer.objects.all().order_by("hostname")
         server_info = []
         for current in server_list:
-            server_info.append({"host_name": current,
-								"ip_address": helpers.ip_info(current.hostname)})
+            server_info.append({"host_name": current, 
+					"ip_address": helpers.ip_info(current.hostname)})
 
         messages.error(request, "Can not found log file of %s" % dns_server)
         return redirect("server_list")
     else:
         output_list = output.split('\n')
     return render(request, "bcommon/history.html", {"output_list": output_list, 
-													"dns_server": dns_server})
+			"dns_server": dns_server})
