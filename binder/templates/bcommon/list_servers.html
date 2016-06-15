@@ -6,6 +6,7 @@
   <tr>
     <th>Hostname</th>
     <th>IP Address</th>
+	<th>Query History</th>
   </tr>
 {% for current_server in server_info %}
   <tr>
@@ -14,6 +15,7 @@
       {{type}}: {{data}}<br>
       {% endfor %}
     </td>
+	<td><a href="{% url "history" dns_server=current_server.host_name %}">History</td>
   </tr>
 {% endfor %}
 </table>

@@ -1,4 +1,5 @@
 # Binder VIews
+import subprocess
 
 # 3rd Party
 from django.contrib import messages
@@ -197,3 +198,31 @@ def view_delete_record(request, dns_server, zone_name):
 				   "type_list": type_list,
 				   "name_list": name_list,
                    "form": form})
+
+@login_required
+def view_query_history(request, dns_server):
+    try:
+        output = subprocess.check_output(["query.sh"])
+    except (OSError, IOError) as e:
+        server_list = models.BindServer.objects.all().order_by("hostname")
+        server_info = []
+        for current in server_list:
+            server_info.append({"host_name": current, 
+								"ip_address": helpers.ip_info(current.hostname)})
+
+        messages.error(request, "Some error occur when getting "
+				"history of %s" % dns_server)
+        return redirect("server_list")
+    except subprocess.CalledProcessError:
+        server_list = models.BindServer.objects.all().order_by("hostname")
+        server_info = []
+        for current in server_list:
+            server_info.append({"host_name": current,
+								"ip_address": helpers.ip_info(current.hostname)})
+
+        messages.error(request, "Can not found log file of %s" % dns_server)
+        return redirect("server_list")
+    else:
+        output_list = output.split('\n')
+    return render(request, "bcommon/history.html", {"output_list": output_list, 
+													"dns_server": dns_server})
